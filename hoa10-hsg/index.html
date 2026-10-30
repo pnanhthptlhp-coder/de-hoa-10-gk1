@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Đề kiểm tra Hóa học 10 – HSG</title>
+<style>
+:root{--bg:#eef2f7;--card:#fff;--ink:#18212f;--muted:#64748b;--blue:#1d4ed8;--blue2:#173b8f;--line:#dbe2ea;--ok:#e9f8ef;--bad:#fff0f0;}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Times New Roman",serif;font-size:17px;line-height:1.5}
+.wrap{max-width:1000px;margin:auto;padding:20px 14px 80px}
+.hero{background:linear-gradient(135deg,#173b8f,#2d63d4);color:#fff;border-radius:18px;padding:24px;box-shadow:0 10px 28px rgba(23,59,143,.18)}
+.hero h1{text-align:center;font-size:27px;margin:12px 0 4px}
+.center{text-align:center} .bold{font-weight:700}
+.info{display:grid;grid-template-columns:2fr 1fr 1fr;gap:10px;margin-top:16px}
+.info input{padding:11px;border:0;border-radius:8px;font-family:inherit;font-size:16px}
+.timer{position:sticky;top:8px;z-index:20;width:max-content;margin:10px auto;background:#fff;border:1px solid var(--line);border-radius:10px;padding:9px 14px;font-weight:700;color:var(--blue2);box-shadow:0 4px 14px rgba(0,0,0,.08)}
+.card{background:#fff;border:1px solid var(--line);border-radius:15px;padding:20px;margin:18px 0;box-shadow:0 4px 18px rgba(15,23,42,.05)}
+.card h2{color:var(--blue2);margin:0 0 8px;font-size:21px}
+.note{color:var(--muted);font-size:15px}
+.q{padding:16px 0;border-top:1px dashed #d7dde7}
+.q:first-of-type{border-top:0}
+.qt{font-weight:700;margin-bottom:8px}
+.opt{display:block;border:1px solid #d9e0ea;border-radius:9px;padding:9px 10px;margin:7px 0;cursor:pointer}
+.opt:hover{background:#f7f9fc}
+.opt input{margin-right:8px}
+.tfgrid{display:grid;grid-template-columns:1fr 80px 80px;gap:6px;align-items:center}
+.tfh{font-weight:700;text-align:center;color:#475569}
+.tfi{padding:8px 0;border-top:1px solid #edf0f4}
+.tfc{text-align:center}
+.correct{background:var(--ok)!important}
+.wrong{background:var(--bad)!important}
+.explain{display:none;margin-top:8px;padding:9px 11px;border-left:4px solid #8aa4df;background:#f7f9fd;font-size:15px}
+.result{display:none;background:#fff;border:2px solid #a9b9e8;border-radius:15px;padding:20px;margin-top:18px}
+.score{font-size:34px;font-weight:800;color:var(--blue2)}
+.actions{position:sticky;bottom:0;background:rgba(238,242,247,.96);backdrop-filter:blur(5px);border-top:1px solid var(--line);padding:12px;display:flex;justify-content:center;gap:10px}
+button{border:0;border-radius:9px;padding:11px 18px;font-weight:700;font-size:15px;cursor:pointer}
+.primary{background:var(--blue);color:#fff}
+.secondary{background:#fff;border:1px solid #b9c3d2}
+.warn{color:#b42318}
+@media(max-width:700px){.info{grid-template-columns:1fr}.tfgrid{grid-template-columns:1fr 64px 64px}.hero h1{font-size:22px}}
+@media print{body{background:#fff}.actions,.timer,.result{display:none!important}.hero{background:#fff;color:#000;border:1px solid #999;box-shadow:none}.card{box-shadow:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<section class="hero">
+<div class="center bold">TRƯỜNG THPT LÊ HỒNG PHONG</div>
+<div class="center bold">TỔ: HÓA HỌC</div>
+<h1>ĐỀ KIỂM TRA HÓA HỌC 10</h1>
+<div class="center bold">MỨC ĐỘ PHÂN HÓA HỌC SINH GIỎI</div>
+<div class="center">Giữa học kỳ I – Năm học 2026 – 2027</div>
+<div class="info">
+<input id="name" placeholder="Họ và tên học sinh">
+<input id="class" placeholder="Lớp">
+<input id="sbd" placeholder="SBD">
+</div>
+</section>
+
+<div class="timer">Thời gian còn lại: <span id="time">45:00</span></div>
+<form id="quiz"></form>
+
+<div id="result" class="result">
+<div class="bold">KẾT QUẢ</div>
+<div class="score"><span id="score">0.00</span>/10.00</div>
+<div id="detail"></div>
+<p class="note">Hệ thống chấm tự động 28 câu nhiều lựa chọn và 12 ý Đúng/Sai.</p>
+</div>
+
+<div class="actions">
+<button type="button" class="secondary" onclick="window.print()">In đề</button>
+<button type="button" class="secondary" onclick="resetQuiz()">Làm lại</button>
+<button type="button" class="primary" onclick="submitQuiz(false)">Nộp bài & chấm điểm</button>
+</div>
+</div>
+
+<script>
+const DATA={"mcqs": [{"num": 1, "q": "Một vật liệu mới có khả năng tự phân hủy trong môi trường được nghiên cứu để thay thế nhựa truyền thống. Nội dung nào sau đây thuộc phạm vi nghiên cứu trực tiếp của hóa học?", "opts": ["Tốc độ phân hủy của vật liệu và sự biến đổi cấu trúc của các chất tạo nên vật liệu.", "Ảnh hưởng của vật liệu đến mật độ dân số.", "Quỹ đạo chuyển động của vật liệu trong không gian.", "Sự phân bố địa lí của nơi sản xuất vật liệu."]}, {"num": 2, "q": "Khối lượng của một nguyên tử gần như tập trung hoàn toàn ở hạt nhân vì", "opts": ["electron không có khối lượng.", "proton và neutron có khối lượng lớn hơn electron rất nhiều.", "số electron luôn nhỏ hơn số proton.", "hạt nhân có kích thước lớn hơn nguyên tử."]}, {"num": 3, "q": "Một nguyên tử trung hòa X có 13 electron và 14 neutron. Tổng số hạt mang điện trong X là", "opts": ["13.", "14.", "26.", "27."]}, {"num": 4, "q": "Hai nguyên tử X và Y có tổng số proton lần lượt là 17 và 17, số neutron lần lượt là 18 và 20. Phát biểu đúng là", "opts": ["X và Y là hai nguyên tố khác nhau.", "X và Y là hai đồng vị của cùng một nguyên tố.", "X và Y có cùng số khối.", "X và Y có cùng số neutron."]}, {"num": 5, "q": "Nguyên tử X có số khối bằng 39, số neutron nhiều hơn số proton 1 hạt. Số hiệu nguyên tử của X là", "opts": ["18.", "19.", "20.", "21."]}, {"num": 6, "q": "Nguyên tố X có hai đồng vị A Z X và A +2 Z X . Hai đồng vị này", "opts": ["có cùng số neutron.", "có cùng số proton.", "có cùng số khối.", "có cùng nguyên tử khối."]}, {"num": 7, "q": "Phát biểu nào phân biệt đúng “số khối” và “nguyên tử khối trung bình”?", "opts": ["Cả hai đều luôn là số nguyên.", "Số khối áp dụng cho một đồng vị, còn nguyên tử khối trung bình phụ thuộc thành phần đồng vị.", "Số khối phụ thuộc tỉ lệ đồng vị.", "Nguyên tử khối trung bình luôn bằng số khối của đồng vị phổ biến nhất."]}, {"num": 8, "q": "Một nguyên tố có hai đồng vị với số khối 24 và 26. Nếu nguyên tử khối trung bình bằng 24,4 thì đồng vị nhẹ chiếm", "opts": ["20%.", "40%.", "60%.", "80%."]}, {"num": 9, "q": "Theo mô hình hiện đại, mô tả nào sau đây đúng nhất?", "opts": ["Electron chuyển động trên những quỹ đạo tròn xác định.", "Không thể xác định chính xác quỹ đạo chuyển động của electron; electron tồn tại trong vùng không gian có xác suất tìm thấy lớn.", "Electron đứng yên trong các orbital.", "Orbital là quỹ đạo chuyển động của electron."]}, {"num": 10, "q": "Một phân lớp có 5 orbital. Phân lớp đó là", "opts": ["s.", "p.", "d.", "f."]}, {"num": 11, "q": "Tổng số orbital trong các phân lớp 3s, 3p, 3d bằng", "opts": ["5.", "7.", "9.", "18."]}, {"num": 12, "q": "Số electron tối đa có thể chứa trong toàn bộ lớp n = 3 là", "opts": ["8.", "10.", "18.", "32."]}, {"num": 13, "q": "Nguyên tử X có tổng số electron ở các phân lớp p bằng 8 và có 3 lớp electron. Cấu hình electron của X là", "opts": ["1s 2 2s 2 2p 6 3s 2 .", "1s 2 2s 2 2p 6 3s 2 3p 2 .", "1s 2 2s 2 2p 6 3s 2 3p 4 .", "1s 2 2s 2 2p 6 3s 2 3p 6 ."]}, {"num": 14, "q": "Nguyên tử X có cấu hình electron 1s 2 2s 2 2p 6 3s 2 3p 5 . Số electron độc thân ở phân lớp ngoài cùng theo cách phân bố electron vào các orbital là", "opts": ["0.", "1.", "2.", "3."]}, {"num": 15, "q": "Nguyên tử X thuộc một trong 20 nguyên tố đầu tiên và có 2 electron ở lớp ngoài cùng, lớp ngoài cùng là lớp thứ ba. Số hiệu nguyên tử của X là", "opts": ["10.", "11.", "12.", "13."]}, {"num": 16, "q": "Nguyên tử X có 6 electron lớp ngoài cùng và thuộc chu kì 3. Cấu hình electron của X là", "opts": ["1s 2 2s 2 2p 6 3s 2 3p 2 .", "1s 2 2s 2 2p 6 3s 2 3p 4 .", "1s 2 2s 2 2p 6 3s 2 3p 5 .", "1s 2 2s 2 2p 6 3s 2 3p 6 ."]}, {"num": 17, "q": "Trong bảng tuần hoàn hiện đại, hai nguyên tố được xếp cùng một nhóm A khi nguyên tử của chúng thường có", "opts": ["cùng số lớp electron.", "cùng số electron lớp ngoài cùng.", "cùng số proton.", "cùng nguyên tử khối."]}, {"num": 18, "q": "Nguyên tố X có cấu hình electron kết thúc bằng 3s 2 . X thuộc", "opts": ["chu kì 2, nhóm IIA.", "chu kì 3, nhóm IIA.", "chu kì 3, nhóm IIIA.", "chu kì 2, nhóm IIIA."]}, {"num": 19, "q": "Nguyên tử X có cấu hình electron 1s 2 2s 2 2p 6 3s 2 3p 1 . Phát biểu đúng là", "opts": ["X là nguyên tố s.", "X thuộc chu kì 2.", "X thuộc nhóm IIIA.", "X là khí hiếm."]}, {"num": 20, "q": "Ba nguyên tố X, Y, Z lần lượt có cấu hình electron lớp ngoài cùng là 3s 1 , 3s 2 , 3s 2 3p 1 . Thứ tự số hiệu nguyên tử tăng dần là", "opts": ["X < Y < Z.", "Z < Y < X.", "Y < X < Z.", "X < Z < Y."]}, {"num": 21, "q": "Hai nguyên tố X và Y thuộc cùng chu kì. X đứng trước Y trong bảng tuần hoàn. Phát biểu phù hợp nhất là", "opts": ["bán kính X nhỏ hơn Y và độ âm điện X lớn hơn Y.", "bán kính X lớn hơn Y và độ âm điện X nhỏ hơn Y.", "bán kính và độ âm điện của X đều lớn hơn Y.", "bán kính và độ âm điện của X đều nhỏ hơn Y."]}, {"num": 22, "q": "Trong các nguyên tố Na, Mg, Al, Si, nguyên tố có bán kính nguyên tử nhỏ nhất là", "opts": ["Na.", "Mg.", "Al.", "Si."]}, {"num": 23, "q": "Trong các nguyên tố Li, Na, K, nguyên tố có tính kim loại mạnh nhất là", "opts": ["Li.", "Na.", "K.", "cả ba như nhau."]}, {"num": 24, "q": "Hai nguyên tố X và Y thuộc cùng nhóm A, X nằm trên Y. Phát biểu đúng là", "opts": ["X có bán kính lớn hơn Y.", "X có tính kim loại mạnh hơn Y.", "Y có số lớp electron nhiều hơn X.", "Y có độ âm điện lớn hơn X."]}, {"num": 25, "q": "Cho các nguyên tố Na, Mg, Al, Si. Thứ tự giảm dần tính kim loại là", "opts": ["Na > Mg > Al > Si.", "Si > Al > Mg > Na.", "Mg > Na > Al > Si.", "Na > Al > Mg > Si."]}, {"num": 26, "q": "Trong chu kì 3, oxide cao nhất của nguyên tố nào sau đây có tính acid mạnh nhất trong các chất được xét?", "opts": ["Na.", "Mg.", "Al.", "Si."]}, {"num": 27, "q": "Cho các oxide Na 2 O, MgO, Al 2 O 3 , SiO 2 . Phát biểu đúng là", "opts": ["tính base tăng dần từ Na 2 O đến SiO 2 .", "Na 2 O và MgO có tính base, Al 2 O 3 lưỡng tính, SiO 2 có tính acid.", "tất cả đều là oxide base.", "tất cả đều là oxide acid."]}, {"num": 28, "q": "Cho các hydroxide NaOH, Mg(OH) 2 , Al(OH) 3 . Khi đi từ Na đến Al trong chu kì 3, xu hướng phù hợp nhất là", "opts": ["tính base tăng dần.", "tính base giảm dần, xuất hiện tính lưỡng tính.", "tính acid giảm dần.", "không có quy luật."]}], "mcq_answers": ["A", "B", "C", "B", "B", "B", "B", "D", "B", "C", "C", "C", "B", "B", "C", "B", "B", "B", "C", "A", "B", "D", "C", "C", "A", "D", "B", "B"], "tf": [{"num": 1, "stem": "Nguyên tử X trung hòa có tổng số hạt proton, neutron và electron bằng 58. Số hạt mang điện nhiều hơn số hạt không mang điện là 18.", "items": [{"label": "a", "text": "X có 19 proton."}, {"label": "b", "text": "Số neutron của X bằng 20."}, {"label": "c", "text": "Số khối của X bằng 39."}, {"label": "d", "text": "Nếu bán kính nguyên tử X xấp xỉ 2,0×10 −10 m và coi nguyên tử là hình cầu thì thể tích của một nguyên tử X xấp xỉ 3,35×10 −29 m 3 ."}]}, {"num": 2, "stem": "Nguyên tố X có hai đồng vị bền 35 X và 37 X . Trong tự nhiên, nguyên tử khối trung bình của X bằng 35,5.", "items": [{"label": "a", "text": "Phần trăm số nguyên tử 37 X bằng 25%."}, {"label": "b", "text": "Tỉ lệ số nguyên tử 35 X : 37 X = 3 : 1."}, {"label": "c", "text": "Trong một mẫu chứa 2 000 nguyên tử X có trung bình 500 nguyên tử 37 X ."}, {"label": "d", "text": "Nếu số hiệu nguyên tử của X bằng 17 thì tổng số neutron của một nguyên tử 35 X và một nguyên tử 37 X bằng 38."}]}, {"num": 3, "stem": "Cho ba nguyên tố X, Y, Z có số hiệu nguyên tử lần lượt bằng 11, 14 và 17.", "items": [{"label": "a", "text": "X, Y, Z đều thuộc chu kì 3."}, {"label": "b", "text": "Cấu hình electron lớp ngoài cùng của Y là 3s 2 3p 2 ."}, {"label": "c", "text": "Bán kính nguyên tử biến đổi theo thứ tự X > Y > Z."}, {"label": "d", "text": "Tính phi kim biến đổi theo thứ tự X > Y > Z."}]}], "tf_answers": [[true, true, true, true], [true, true, true, true], [true, true, true, false]]};
+const letters=['A','B','C','D'];
+
+function render(){
+ let h='<section class="card"><h2>PHẦN I. TRẮC NGHIỆM NHIỀU LỰA CHỌN</h2><div class="note">28 câu, mỗi câu chỉ có một phương án đúng.</div>';
+ DATA.mcqs.forEach((x,i)=>{
+   h+=`<div class="q" id="mBox${i}"><div class="qt">Câu ${x.num}. ${x.q}</div>`;
+   x.opts.forEach((o,j)=>{h+=`<label class="opt"><input type="radio" name="m${i}" value="${j}"> <b>${letters[j]}.</b> ${o}</label>`;});
+   h+=`<div class="explain" id="mExp${i}"></div></div>`;
+ });
+ h+='</section>';
+
+ h+='<section class="card"><h2>PHẦN II. TRẮC NGHIỆM ĐÚNG – SAI</h2><div class="note">3 câu, mỗi câu gồm 4 ý. Chọn Đúng hoặc Sai cho từng ý.</div>';
+ DATA.tf.forEach((x,i)=>{
+   h+=`<div class="q" id="tBox${i}"><div class="qt">Câu ${x.num}. ${x.stem}</div><div class="tfgrid"><div></div><div class="tfh">Đúng</div><div class="tfh">Sai</div>`;
+   x.items.forEach((it,j)=>{
+      h+=`<div class="tfi"><b>${it.label})</b> ${it.text}</div><div class="tfc"><input type="radio" name="t${i}_${j}" value="true"></div><div class="tfc"><input type="radio" name="t${i}_${j}" value="false"></div>`;
+   });
+   h+=`</div><div class="explain" id="tExp${i}"></div></div>`;
+ });
+ h+='</section>';
+ document.getElementById('quiz').innerHTML=h;
+ loadSaved();
+ document.querySelectorAll('input').forEach(el=>el.addEventListener('change',save));
+}
+
+function save(){
+ const d={name:document.getElementById('name').value,cls:document.getElementById('class').value,sbd:document.getElementById('sbd').value};
+ document.querySelectorAll('input[type=radio]:checked').forEach(x=>d[x.name]=x.value);
+ localStorage.setItem('hoa10_hsg_test',JSON.stringify(d));
+}
+function loadSaved(){
+ try{
+  const d=JSON.parse(localStorage.getItem('hoa10_hsg_test')||'{}');
+  document.getElementById('name').value=d.name||'';
+  document.getElementById('class').value=d.cls||'';
+  document.getElementById('sbd').value=d.sbd||'';
+  Object.entries(d).forEach(([k,v])=>{
+    if(k.startsWith('m')||k.startsWith('t')){
+      const e=document.querySelector(`input[name="${k}"][value="${v}"]`);
+      if(e)e.checked=true;
+    }
+  });
+ }catch(e){}
+}
+
+function submitQuiz(auto){
+ let mcqCorrect=0,tfCorrect=0,answered=0;
+ DATA.mcqs.forEach((x,i)=>{
+   const s=document.querySelector(`input[name="m${i}"]:checked`);
+   const box=document.getElementById('mBox'+i);
+   box.classList.remove('correct','wrong');
+   const ansIndex=letters.indexOf(DATA.mcq_answers[i]);
+   if(s){
+      answered++;
+      if(+s.value===ansIndex){mcqCorrect++;box.classList.add('correct');}
+      else box.classList.add('wrong');
+   } else box.classList.add('wrong');
+   const exp=document.getElementById('mExp'+i);
+   exp.style.display='block';
+   exp.innerHTML=`<b>Đáp án: ${DATA.mcq_answers[i]}</b>`;
+ });
+
+ DATA.tf.forEach((x,i)=>{
+   let qCorrect=0;
+   x.items.forEach((it,j)=>{
+     const s=document.querySelector(`input[name="t${i}_${j}"]:checked`);
+     if(s){
+       answered++;
+       if((s.value==='true')===DATA.tf_answers[i][j]){tfCorrect++;qCorrect++;}
+     }
+   });
+   const box=document.getElementById('tBox'+i);
+   box.classList.remove('correct','wrong');
+   box.classList.add(qCorrect===4?'correct':'wrong');
+   const exp=document.getElementById('tExp'+i);
+   exp.style.display='block';
+   exp.innerHTML='<b>Đáp án:</b> '+DATA.tf_answers[i].map((v,j)=>String.fromCharCode(97+j)+') '+(v?'Đúng':'Sai')).join('; ');
+ });
+
+ const totalCorrect=mcqCorrect+tfCorrect;
+ const score=totalCorrect/40*10;
+ document.getElementById('score').textContent=score.toFixed(2);
+ document.getElementById('detail').textContent=(auto?'Hết giờ. ':'')+`Đúng ${totalCorrect}/40 lệnh hỏi. Phần I: ${mcqCorrect}/28; Phần II: ${tfCorrect}/12.`;
+ document.getElementById('result').style.display='block';
+ document.querySelectorAll('input').forEach(x=>x.disabled=true);
+ document.getElementById('result').scrollIntoView({behavior:'smooth',block:'center'});
+ save();
+}
+
+function resetQuiz(){
+ if(!confirm('Xóa toàn bộ bài làm và làm lại từ đầu?'))return;
+ localStorage.removeItem('hoa10_hsg_test');
+ location.reload();
+}
+
+let left=45*60;
+const timer=setInterval(()=>{
+ left--;
+ const m=Math.floor(left/60),s=left%60;
+ document.getElementById('time').textContent=String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
+ if(left<=300)document.getElementById('time').classList.add('warn');
+ if(left<=0){clearInterval(timer);submitQuiz(true);}
+},1000);
+
+document.getElementById('name').addEventListener('change',save);
+document.getElementById('class').addEventListener('change',save);
+document.getElementById('sbd').addEventListener('change',save);
+render();
+</script>
+</body>
+</html>
